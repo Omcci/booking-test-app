@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { createReservation } from "@/services/reservation/reservationApi";
-import { useMutation } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { createReservation, getAllReservations } from "@/services/reservation/reservationApi";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { format, isWithinInterval } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -30,6 +30,21 @@ export default function ReservationPage() {
     }
   });
 
+  const { data: reservations } = useQuery({
+    queryKey: ["reservations"],
+    queryFn: getAllReservations
+  });
+
+  const isDateBooked = (date: Date) => {
+    if (!reservations) return false;
+
+    return reservations.some((reservation) =>
+      isWithinInterval(date, {
+        start: new Date(reservation.startDate),
+        end: new Date(reservation.endDate)
+      })
+    );
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -72,6 +87,17 @@ export default function ReservationPage() {
                     selected={startDate}
                     onSelect={setStartDate}
                     initialFocus
+                    disabled={isDateBooked}
+                    modifiers={{
+                      booked: (date) => isDateBooked(date)
+                    }}
+                    modifiersStyles={{
+                      booked: {
+                        textDecoration: "line-through",
+                        backgroundColor: "rgb(239 68 68 / 0.1)",
+                        color: "rgb(239 68 68)"
+                      }
+                    }}
                   />
                 </PopoverContent>
               </Popover>
@@ -99,6 +125,17 @@ export default function ReservationPage() {
                     selected={endDate}
                     onSelect={setEndDate}
                     initialFocus
+                    disabled={isDateBooked}
+                    modifiers={{
+                      booked: (date) => isDateBooked(date)
+                    }}
+                    modifiersStyles={{
+                      booked: {
+                        textDecoration: "line-through",
+                        backgroundColor: "rgb(239 68 68 / 0.1)",
+                        color: "rgb(239 68 68)"
+                      }
+                    }}
                   />
                 </PopoverContent>
               </Popover>
