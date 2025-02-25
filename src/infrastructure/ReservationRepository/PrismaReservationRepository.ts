@@ -1,5 +1,6 @@
 import { Reservation } from "@/domain/Reservation";
 import { ReservationRepositoryInterface } from "./ReservationRepositoryInterface";
+import prisma from "@/infrastructure/client/prisma";
 
 export class PrismaReservationRepository
   implements ReservationRepositoryInterface
@@ -24,6 +25,14 @@ export class PrismaReservationRepository
       data: {
         startDate,
         endDate,
+      },
+    });
+  }
+
+  getAllReservations(): Promise<Reservation[]> {
+    return prisma.reservation.findMany({
+      orderBy: {
+        startDate: "asc",
       },
     });
   }

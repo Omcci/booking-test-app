@@ -25,3 +25,9 @@ export const POST = async (request: Request) => {
     return Response.json({ error: (error as Error).message }, { status: 400 });
   }
 };
+
+export const GET = async () => {
+  const prismaReservationRepository = new PrismaReservationRepository();
+  const reservations = await prismaReservationRepository.getAllReservations();
+  return Response.json(reservations);
+};

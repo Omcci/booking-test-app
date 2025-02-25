@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "./providers/QueryProvider";
+import { NavBar } from "@/components/NavBar";
+import { Toaster } from "@/components/ui/sonner";
 
 const figTreeSans = Figtree({
   variable: "--font-figtree-sans",
@@ -29,7 +31,11 @@ export default function RootLayout({
         className={`${figTreeSans.variable} ${figTreeMono.variable} antialiased`}
       >
         <QueryProvider>
-          {children}
+          <NavBar />
+          <main className="container mx-auto py-4">
+            {children}
+          </main>
+          <Toaster />
         </QueryProvider>
       </body>
     </html>

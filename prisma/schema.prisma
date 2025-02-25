@@ -12,6 +12,6 @@ datasource db {
 
 model Reservation {
   id String @id @default(cuid())
-  start DateTime
-  end DateTime
+  startDate DateTime
+  endDate DateTime
 }

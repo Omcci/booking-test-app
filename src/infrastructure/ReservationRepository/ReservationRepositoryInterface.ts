@@ -6,4 +6,5 @@ export interface ReservationRepositoryInterface {
     endDate: Date
   ): Promise<Reservation[]>;
   saveReservation(startDate: Date, endDate: Date): Promise<Reservation>;
+  getAllReservations(): Promise<Reservation[]>;
 }

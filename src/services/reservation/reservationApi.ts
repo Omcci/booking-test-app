@@ -1,3 +1,5 @@
+import { Reservation } from "@/domain/Reservation";
+
 export async function createReservation({
   startDate,
   endDate,
@@ -12,7 +14,16 @@ export async function createReservation({
   });
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.message || "An error occurred");
+    throw new Error(data.error || "An error occurred");
+  }
+  return data;
+}
+
+export async function getAllReservations(): Promise<Reservation[]> {
+  const response = await fetch("/api/reservations");
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "An error occurred");
   }
   return data;
 }
